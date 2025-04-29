@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-[#FF8C00] min-h-screen flex flex-col">
+    <header class="bg-blue-500 text-white py-4 text-center shadow-md rounded-b-lg">
+        <h1 class="text-2xl font-semibold">Programming Quiz </h1>
+    </header>
+
+    <main class="container mx-auto py-6 flex-grow flex justify-center items-start">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full max-w-7xl">
+            <aside class="md:col-span-1 bg-white rounded-lg shadow-md p-4 space-y-3">
+                <h2 class="text-lg font-semibold text-gray-700">Topics</h2>
+                <ul class="space-y-2">
+                    <li class="topic-link cursor-pointer hover:bg-gray-100 rounded-md p-2 transition duration-300 ease-in-out" data-topic="computer">Computer</li>
+                    <li class="topic-link cursor-pointer hover:bg-gray-100 rounded-md p-2 transition duration-300 ease-in-out" data-topic="c">C</li>
+                    <li class="topic-link cursor-pointer hover:bg-gray-100 rounded-md p-2 transition duration-300 ease-in-out" data-topic="java">Java</li>
+                    <li class="topic-link cursor-pointer hover:bg-gray-100 rounded-md p-2 transition duration-300 ease-in-out" data-topic="python">Python</li>
+                    <li class="topic-link cursor-pointer hover:bg-gray-100 rounded-md p-2 transition duration-300 ease-in-out" data-topic="cpp">C++</li>
+                </ul>
+            </aside>
+
+            <section class="md:col-span-3 bg-white rounded-lg shadow-md p-6 w-full" id="quiz-content">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Welcome to the Quiz!</h2>
+                <p class="text-gray-600">Select a topic from the menu to start the quiz.</p>
+                <div id="question-container" class="hidden mt-4 space-y-4">
+                    </div>
+                <div id="results-container" class="hidden mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Results</h3>
+                    <p class="text-gray-600">Your Score: <span id="final-score">0</span></p>
+                    <div id="correct-answers" class="mt-2 space-y-1">
+                        <h4 class="font-semibold text-gray-700">Correct Answers:</h4>
+                    </div>
+                    <div id="wrong-answers" class="mt-2 space-y-1">
+                        <h4 class="font-semibold text-gray-700">Incorrect Answers:</h4>
+                    </div>
+                    <button id="restart-quiz" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mt-4 transition duration-300 ease-in-out">Restart Quiz</button>
+                </div>
+                <div id="message-container" class="text-red-500 mt-4">
+                    </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-3 text-center rounded-t-lg shadow-md">
+        <p>© 2025 Programming Quiz App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const quizData = {
+            computer: [
+                {
+                    question: "What does CPU stand for?",
+                    options: ["Central Processing Unit", "Computer Processing Unit", "Central Program Unit", "Control Processing Unit"],
+                    correctAnswer: "Central Processing Unit"
+                },
+                {
+                    question: "What is the main function of an operating system?",
+                    options: ["To manage hardware and software resources", "To provide internet access", "To create documents", "To play games"],
+                    correctAnswer: "To manage hardware and software resources"
+                },
+                {
+                    question: "Which of the following is a type of computer memory?",
+                    options: ["RAM", "ROM", "Both RAM and ROM", "Neither RAM nor ROM"],
+                    correctAnswer: "Both RAM and ROM"
+                },
+                {
+                    question: "What does HTML stand for?",
+                    options: ["Hyper Text Markup Language", "High Text Markup Language", "Hyper Transfer Markup Language", "High Transfer Markup Language"],
+                    correctAnswer: "Hyper Text Markup Language"
+                },
+                {
+                    question: "What is the purpose of a firewall?",
+                    options: ["To protect against unauthorized access", "To improve internet speed", "To enhance computer performance", "To create backups"],
+                    correctAnswer: "To protect against unauthorized access"
+                },
+                {
+                    question: "Which of the following is an input device?",
+                    options: ["Monitor", "Printer", "Keyboard", "Speaker"],
+                    correctAnswer: "Keyboard"
+                },
+                {
+                    question: "What is the binary number system base?",
+                    options: ["2", "8", "10", "16"],
+                    correctAnswer: "2"
+                },
+                {
+                    question: "What is the full form of WWW?",
+                    options: ["World Wide Web", "Wide World Web", "Web Wide World", "World Wide World"],
+                    correctAnswer: "World Wide Web"
+                },
+                {
+                    question: "Which of the following is a search engine?",
+                    options: ["Google Chrome", "Mozilla Firefox", "Microsoft Edge", "Google"],
+                    correctAnswer: "Google"
+                },
+                {
+                    question: "What is the function of an IP address?",
+                    options: ["To identify a device on a network", "To store files", "To display graphics", "To process data"],
+                    correctAnswer: "To identify a device on a network"
+                }
+            ],
+            c: [
+                {
+                    question: "What is the output of the following C code snippet?\n\n#include <stdio.h>\n\nint main() {\n  printf(\"Hello, World!\");\n  return 0;\n}",
+                    options: ["Hello, World!", "Hello, World", "Error", "No output"],
+                    correctAnswer: "Hello, World!"
+                },
+                {
+                    question: "Which data type is used to store whole numbers in C?",
+                    options: ["int", "float", "char", "string"],
+                    correctAnswer: "int"
+                },
+                {
+                    question: "What is the purpose of the 'scanf()' function in C?",
+                    options: ["To print output", "To read input", "To declare variables", "To define functions"],
+                    correctAnswer: "To read input"
+                },
+                {
+                    question: "What does the 'malloc()' function do in C?",
+                    options: ["Allocates memory", "Frees memory", "Prints output", "Reads input"],
+                    correctAnswer: "Allocates memory"
+                },
+                {
+                    question: "What is the correct way to declare a character array (string) in C?",
+                    options: ["char str[];", "string str;", "char str[10];", "char *str;"],
+                    correctAnswer: "char str[10];"
+                },
+                {
+                    question: "Which operator is used to access the member of a structure in C?",
+                    options: [".", "->", "*", "&"],
+                    correctAnswer: "."
+                },
+                {
+                    question: "What is the output of the following C code snippet?\n\n#include <stdio.h>\n\nint main() {\n  int x = 5;\n  int *p = &x;\n  printf(\"%d\", *p);\n  return 0;\n}",
+                    options: ["5", "Address of x", "Error", "0"],
+                    correctAnswer: "5"
+                },
+                {
+                    question: "Which header file is required for using the printf() and scanf() functions in C?",
+                    options: ["stdio.h", "stdlib.h", "math.h", "string.h"],
+                    correctAnswer: "stdio.h"
+                },
+                {
+                    question: "What is the purpose of the 'static' keyword in C?",
+                    options: ["To make a variable constant", "To make a variable global", "To preserve a variable's value between function calls", "To define a macro"],
+                    correctAnswer: "To preserve a variable's value between function calls"
+                },
+                {
+                    question: "What will be the output of the following C code?\n\n#include <stdio.h>\n\nint main() {\n  int i;\n  for (i = 0; i < 5; i++) {\n    printf(\"%d \", i);\n  }\n  return 0;\n}",
+                    options: ["0 1 2 3 4", "1 2 3 4 5", "0 1 2 3 4 5", "1 2 3 4"],
+                    correctAnswer: "0 1 2 3 4"
+                }
+            ],
+            java: [
+                {
+                    question: "Which keyword is used to define a class in Java?",
+                    options: ["class", "struct", "def", "object"],
+                    correctAnswer: "class"
+                },
+                {
+                    question: "What is the entry point of a Java program?",
+                    options: ["main()", "start()", "run()", "execute()"],
+                    correctAnswer: "main()"
+                },
+                {
+                    question: "Which data type is used to store a single character in Java?",
+                    options: ["char", "string", "int", "float"],
+                    correctAnswer: "char"
+                },
+                {
+                    question: "What does JVM stand for?",
+                    options: ["Java Virtual Machine", "Java Visual Machine", "Java Vector Machine", "Java Verified Machine"],
+                    correctAnswer: "Java Virtual Machine"
+                },
+                {
+                    question: "Which of the following is not a primitive data type in Java?",
+                    options: ["int", "boolean", "String", "double"],
+                    correctAnswer: "String"
+                },
+                {
+                    question: "What is the purpose of the 'final' keyword in Java?",
+                    options: ["To define a constant", "To define a method", "To define a class", "To define a variable"],
+                    correctAnswer: "To define a constant"
+                },
+                {
+                    question: "Which access modifier provides the most restrictive access in Java?",
+                    options: ["private", "protected", "public", "default"],
+                    correctAnswer: "private"
+                },
+                {
+                    question: "What is the output of the following Java code snippet?\n\npublic class Main {\n  public static void main(String[] args) {\n    System.out.println(\"Hello, World!\");\n  }\n}",
+                    options: ["Hello, World!", "Hello, World", "Error", "No output"],
+                    correctAnswer: "Hello, World!"
+                },
+                {
+                    question: "Which interface is used to implement the 'compareTo()' method in Java?",
+                    options: ["Comparable", "Comparator", "Runnable", "Serializable"],
+                    correctAnswer: "Comparable"
+                },
+                {
+                    question: "What is the purpose of the 'try-catch' block in Java?",
+                    options: ["To handle exceptions", "To define a loop", "To define a function", "To declare a variable"],
+                    correctAnswer: "To handle exceptions"
+                }
+            ],
+            python: [
+                {
+                    question: "Which function is used to print output in Python?",
+                    options: ["print()", "echo()", "display()", "output()"],
+                    correctAnswer: "print()"
+                },
+                {
+                    question: "What is the correct extension for Python files?",
+                    options: [".py", ".python", ".p", ".txt"],
+                    correctAnswer: ".py"
+                },
+                {
+                    question: "Which data type is used to store a sequence of characters in Python?",
+                    options: ["str", "char", "string", "text"],
+                    correctAnswer: "str"
+                },
+                {
+                    question: "What does the 'len()' function do in Python?",
+                    options: ["Returns the length of a string or list", "Returns the largest number", "Returns the smallest number", "Returns the type of a variable"],
+                    correctAnswer: "Returns the length of a string or list"
+                },
+                {
+                    question: "Which keyword is used to define a function in Python?",
+                    options: ["def", "function", "define", "func"],
+                    correctAnswer: "def"
+                },
+                {
+                    question: "What is the output of the following Python code snippet?\n\nprint(\"Hello, World!\")",
+                    options: ["Hello, World!", "Hello, World", "Error", "No output"],
+                    correctAnswer: "Hello, World!"
+                },
+                {
+                    question: "Which method is used to add an element to a list in Python?",
+                    options: ["append()", "add()", "insert()", "push()"],
+                    correctAnswer: "append()"
+                },
+                {
+                    question: "What is the purpose of the 'if __name__ == \"__main__\":' statement in Python?",
+                    options: ["To define the main function of a script", "To import a module", "To define a class", "To handle exceptions"],
+                    correctAnswer: "To define the main function of a script"
+                },
+                {
+                    question: "Which loop is used to iterate over a sequence in Python?",
+                    options: ["for loop", "while loop", "do-while loop", "repeat loop"],
+                    correctAnswer: "for loop"
+                },
+                {
+                    question: "What is a dictionary in Python?",
+                    options: ["An ordered collection of items", "An unordered collection of key-value pairs", "A collection of unique elements", "A collection of functions"],
+                    correctAnswer: "An unordered collection of key-value pairs"
+                }
+            ],
+            cpp: [
+                {
+                    question: "Which operator is used for input in C++?",
+                    options: [">>", "<<", "::", "->"],
+                    correctAnswer: ">>"
+                },
+                {
+                    question: "What is the output of the following C++ code snippet?\n\n#include <iostream>\n\nint main() {\n  std::cout << \"Hello, World!\";\n  return 0;\n}",
+                    options: ["Hello, World!", "Hello, World", "Error", "No output"],
+                    correctAnswer: "Hello, World!"
+                },
+                {
+                    question: "Which keyword is used to define a class in C++?",
+                    options: ["class", "struct", "def", "object"],
+                    correctAnswer: "class"
+                },
+                {
+                    question: "Which data type is used to store a floating-point number in C++?",
+                    options: ["float", "int", "char", "string"],
+                    correctAnswer: "float"
+                },
+                {
+                    question: "What does OOP stand for in C++?",
+                    options: ["Object-Oriented Programming", "Object-Oriented Process", "Object-Oriented Procedure", "Object-Oriented Protocol"],
+                    correctAnswer: "Object-Oriented Programming"
+                },
+                {
+                    question: "Which access specifier is used to make a class member accessible only within the class in C++?",
+                    options: ["private", "protected", "public", "internal"],
+                    correctAnswer: "private"
+                },
+                {
+                    question: "What is the purpose of the 'new' operator in C++?",
+                    options: ["To allocate memory", "To free memory", "To create a new file", "To define a new function"],
+                    correctAnswer: "To allocate memory"
+                },
+                {
+                    question: "Which of the following is a correct way to declare a function in C++?",
+                    options: ["void myFunction();", "myFunction void();", "function void myFunction();", "void function myFunction();"],
+                    correctAnswer: "void myFunction();"
+                },
+                {
+                    question: "What is the output of the following C++ code?\n\n#include <iostream>\n\nusing namespace std;\n\nint main() {\n  int x = 10;\n  int &ref = x;\n  ref = 20;\n  cout << x;\n  return 0;\n}",
+                    options: ["20", "10", "Error", "0"],
+                    correctAnswer: "20"
+                },
+                {
+                    question: "Which symbol is used to denote a single-line comment in C++?",
+                    options: ["//", "/*", "#", "--"],
+                    correctAnswer: "//"
+                }
+            ]
+        };
+
+        const topicLinks = document.querySelectorAll('.topic-link');
+        const quizContent = document.getElementById('quiz-content');
+        const questionContainer = document.getElementById('question-container');
+        const resultsContainer = document.getElementById('results-container');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const restartQuizButton = document.getElementById('restart-quiz');
+        const messageContainer = document.getElementById('message-container');
+        const correctAnswersDisplay = document.getElementById('correct-answers');
+        const wrongAnswersDisplay = document.getElementById('wrong-answers');
+
+        let currentTopic = '';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let correctAnswers = [];
+        let wrongAnswers = [];
+
+        topicLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                currentTopic = this.dataset.topic;
+                currentQuestions = quizData[currentTopic];
+                currentQuestionIndex = 0;
+                score = 0;
+                userAnswers = [];
+                correctAnswers = [];
+                wrongAnswers = [];
+                quizContent.querySelector('h2').textContent = `${currentTopic.charAt(0).toUpperCase() + currentTopic.slice(1)} Quiz`;
+                questionContainer.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+                messageContainer.textContent = '';
+                correctAnswersDisplay.innerHTML = '<h4 class="font-semibold text-gray-700">Correct Answers:</h4>';
+                wrongAnswersDisplay.innerHTML = '<h4 class="font-semibold text-gray-700">Incorrect Answers:</h4>';
+                loadQuestion();
+            });
+        });
+
+        restartQuizButton.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            correctAnswers = [];
+            wrongAnswers = [];
+            resultsContainer.classList.add('hidden');
+            questionContainer.classList.remove('hidden');
+            messageContainer.textContent = '';
+            correctAnswersDisplay.innerHTML = '<h4 class="font-semibold text-gray-700">Correct Answers:</h4>';
+            wrongAnswersDisplay.innerHTML = '<h4 class="font-semibold text-gray-700">Incorrect Answers:</h4>';
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            questionContainer.innerHTML = '';
+            if (currentQuestionIndex >= currentQuestions.length) {
+                displayResults();
+                return;
+            }
+
+            const questionData = currentQuestions[currentQuestionIndex];
+
+            const questionElement = document.createElement('div');
+            questionElement.className = 'bg-white rounded-lg shadow-md p-4';
+            questionElement.innerHTML = `<h3 class="text-lg font-semibold text-gray-800 mb-2">${questionData.question}</h3>`;
+
+            const optionsElement = document.createElement('div');
+            optionsElement.className = 'space-y-3';
+
+            questionData.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option bg-gray-200 hover:bg-gray-300 rounded-md p-3 cursor-pointer transition duration-300 ease-in-out flex items-center';
+                optionElement.textContent = option;
+                optionElement.dataset.option = option;
+                optionElement.addEventListener('click', () => handleOptionSelect(option));
+                optionsElement.appendChild(optionElement);
+            });
+
+            questionElement.appendChild(optionsElement);
+            questionContainer.appendChild(questionElement);
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Next Question';
+            submitButton.className = 'bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md mt-4 transition duration-300 ease-in-out w-full';
+            submitButton.id = 'submit-button';
+            submitButton.addEventListener('click', () => {
+                if (userAnswers[currentQuestionIndex] === undefined) {
+                    messageContainer.textContent = 'Please select an answer.';
+                    return;
+                }
+                messageContainer.textContent = '';
+                currentQuestionIndex++;
+                loadQuestion();
+            });
+            questionContainer.appendChild(submitButton);
+        }
+
+        function handleOptionSelect(selectedOption) {
+            userAnswers[currentQuestionIndex] = selectedOption;
+            const options = document.querySelectorAll('.option');
+            const correctAnswer = currentQuestions[currentQuestionIndex].correctAnswer;
+
+            options.forEach(option => {
+                if (option.dataset.option === correctAnswer) {
+                    option.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                    option.classList.add('bg-green-300', 'text-white');
+                } else if (option.dataset.option === selectedOption) {
+                    option.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                    option.classList.add('bg-red-300', 'text-white');
+                } else {
+                    option.classList.remove('bg-blue-300', 'text-white');
+                    option.classList.add('bg-gray-200', 'hover:bg-gray-300');
+                }
+            });
+
+            // Disable options after selection
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+
+            // Disable the submit button, so user cannot proceed to next question without selecting an option
+            const submitButton = document.getElementById('submit-button');
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        }
+
+        function displayResults() {
+            questionContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            score = 0;
+            correctAnswers = [];
+            wrongAnswers = [];
+            currentQuestions.forEach((question, index) => {
+                if (userAnswers[index] === question.correctAnswer) {
+                    score++;
+                    correctAnswers.push({
+                        question: question.question,
+                        answer: question.correctAnswer
+                    });
+                } else {
+                    wrongAnswers.push({
+                        question: question.question,
+                        userAnswer: userAnswers[index],
+                        correctAnswer: question.correctAnswer
+                    });
+                }
+            });
+            finalScoreDisplay.textContent = score;
+
+            correctAnswers.forEach(item => {
+                const correctItem = document.createElement('p');
+                correctItem.className = 'text-green-600';
+                correctItem.innerHTML = `<strong>${item.question}</strong>: ${item.answer}`;
+                correctAnswersDisplay.appendChild(correctItem);
+            });
+
+            wrongAnswers.forEach(item => {
+                const wrongItem = document.createElement('p');
+                wrongItem.className = 'text-red-600';
+                wrongItem.innerHTML = `<strong>${item.question}</strong><br>Your Answer: ${item.userAnswer}<br>Correct Answer: ${item.correctAnswer}`;
+                wrongAnswersDisplay.appendChild(wrongItem);
+            });
+        }
+    </script>
+</body>
+</html>
